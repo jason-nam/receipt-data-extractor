@@ -1,1 +1,1 @@
-# sandbox
+# Receipt Information Extractor Code
