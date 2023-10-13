@@ -1,0 +1,4 @@
+tesseract
+pytesseract
+PaddleOCR
+torch
