@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 from pathlib import Path
 
-INPUT_PATH = '../data/unprocessed_images/'
-OUTPUT_PATH = '../data/processed_images/'
+IN_PATH = '../data/unprocessed_images/'
+OUT_PATH = '../data/processed_images/'
 
 # get grayscale image
 def get_grayscale(image):
@@ -54,27 +54,29 @@ def deskew(image):
 def match_template(image, template):
     return cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED) 
 
-image_name = 'img1'
+if __name__ == '__main__':
 
-# test
-image = cv2.imread(INPUT_PATH + image_name + '.jpg')
+    image_name = 'img2'
 
-gray = get_grayscale(image)
-thresh = thresholding(gray)
-opening = opening(gray)
-canny = canny(gray)
+    # test
+    image = cv2.imread(IN_PATH + image_name + '.jpg')
 
-# Display images
-# cv2.imshow("Original Image", image)
-# cv2.imshow("Grayscale Image", gray)
-# cv2.imshow("Thresholded Image", thresh)
-# cv2.imshow("Opening Image", opening)
-# cv2.imshow("Canny Image", canny)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+    gray = get_grayscale(image)
+    thresh = thresholding(gray)
+    opening = opening(gray)
+    canny = canny(gray)
 
-# Save images
-# cv2.imwrite(processed_image_path + image_name + '_gray_image.png', gray)
-cv2.imwrite(OUTPUT_PATH + image_name + '.png', thresh)
-# cv2.imwrite(processed_image_path + image_name + '_opening_image.png', opening)
-# cv2.imwrite(processed_image_path + image_name + '_canny_image.png', canny)
+    # Display images
+    # cv2.imshow("Original Image", image)
+    # cv2.imshow("Grayscale Image", gray)
+    # cv2.imshow("Thresholded Image", thresh)
+    # cv2.imshow("Opening Image", opening)
+    # cv2.imshow("Canny Image", canny)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+    # Save images
+    # cv2.imwrite(processed_image_path + image_name + '_gray_image.png', gray)
+    cv2.imwrite(OUT_PATH + image_name + '.png', thresh)
+    # cv2.imwrite(processed_image_path + image_name + '_opening_image.png', opening)
+    # cv2.imwrite(processed_image_path + image_name + '_canny_image.png', canny)
