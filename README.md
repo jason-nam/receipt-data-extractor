@@ -1,4 +1,4 @@
-# receipt-information-extractor
+# Receipt Data Extractor
 Extract receipt's information using OCR and NLP models
 
 ## Installation
