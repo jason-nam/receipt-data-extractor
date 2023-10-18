@@ -13,30 +13,30 @@ def get_grayscale(image):
 def remove_noise(image):
     return cv2.medianBlur(image,5)
  
-#thresholding
+# thresholding
 def thresholding(image):
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
-#dilation
+# dilation
 def dilate(image):
     kernel = np.ones((5,5),np.uint8)
     return cv2.dilate(image, kernel, iterations = 1)
     
-#erosion
+# erosion
 def erode(image):
     kernel = np.ones((5,5),np.uint8)
     return cv2.erode(image, kernel, iterations = 1)
 
-#opening - erosion followed by dilation
+# opening - erosion followed by dilation
 def opening(image):
     kernel = np.ones((5,5),np.uint8)
     return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
-#canny edge detection
+# canny edge detection
 def canny(image):
     return cv2.Canny(image, 100, 200)
 
-#skew correction
+# skew correction
 def deskew(image):
     coords = np.column_stack(np.where(image > 0))
     angle = cv2.minAreaRect(coords)[-1]
@@ -50,7 +50,7 @@ def deskew(image):
     rotated = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
     return rotated
 
-#template matching
+# template matching
 def match_template(image, template):
     return cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED) 
 
