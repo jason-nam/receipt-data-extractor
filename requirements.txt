@@ -1,4 +1,5 @@
 tesseract
 pytesseract
-PaddleOCR
+# paddleocr
+imutils
 torch
