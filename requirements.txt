@@ -2,4 +2,5 @@ tesseract
 pytesseract
 # paddleocr
 imutils
-torch
+# torch
+opencv-python
