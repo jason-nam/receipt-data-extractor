@@ -12,7 +12,7 @@ def get_grayscale(image):
 # noise removal
 def median_blur(image):
     return cv2.medianBlur(image,5)
- 
+
 # thresholding
 def thresholding(image):
     return cv2.threshold(image, 0, 255, 
@@ -22,7 +22,7 @@ def thresholding(image):
 def adaptive_thresholding(image):
     return cv2.adaptiveThreshold(image, 255,
                                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                 cv2.THRESH_BINARY_INV, 11, 2)
+                                 cv2.THRESH_BINARY_INV, 13, 2)
 
 # dilation
 def dilate(image):
@@ -95,6 +95,9 @@ def sharpening(image):
                        [0, -1, 0]])
     return cv2.filter2D(image, -1, kernel)
 
+def increase_size(image):
+    return cv2.resize(image, None, fx=1.25, fy=1.25, interpolation=cv2.INTER_CUBIC)
+
 
 if __name__ == '__main__':
     # list all image files in the input directory
@@ -103,8 +106,13 @@ if __name__ == '__main__':
     for in_file in in_files:
         # read the image
         image = cv2.imread(str(in_file))
-        
+
+        # TODO might need to consider brightening the white spots? or finding a way to making characters
+        # more defined
+
         # apply preprocessing steps
+        image = increase_size(image)
+
         image = get_grayscale(image)
         # cv2.imshow("grayscale", image)
         # cv2.waitKey(0)
@@ -114,6 +122,8 @@ if __name__ == '__main__':
 
         # sharpen image
         image = sharpening(image)
+
+        image = increase_contrast(image)
 
         image = deskew(image)
         # cv2.imshow("deskew", image)
