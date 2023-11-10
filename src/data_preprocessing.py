@@ -22,7 +22,7 @@ def thresholding(image):
 def adaptive_thresholding(image):
     return cv2.adaptiveThreshold(image, 255,
                                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                 cv2.THRESH_BINARY_INV, 13, 2)
+                                 cv2.THRESH_BINARY_INV, 15, 2)
 
 # dilation
 def dilate(image):
