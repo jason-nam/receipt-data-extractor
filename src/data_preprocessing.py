@@ -98,11 +98,23 @@ def sharpening(image):
 def increase_size(image):
     return cv2.resize(image, None, fx=1.25, fy=1.25, interpolation=cv2.INTER_CUBIC)
 
+def normalize_receipt(image):
+    image = cv2.normalize(image, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    image -= image.min()
+    image /= image.max()
+    image *= 255
+    return image
+
 
 if __name__ == '__main__':
     # list all image files in the input directory
     in_files = list(Path(IN_PATH).glob('*.[jJ][pP]*[gG]'))
-    
+
+    # Ideal conditions (slower, generally more flexible,
+    # lower accuracy but works more often than it doesnt)
+    # - dark background
+    # - camera flash on
+
     for in_file in in_files:
         # read the image
         image = cv2.imread(str(in_file))
@@ -119,6 +131,8 @@ if __name__ == '__main__':
 
         # apply some denoising to get rid of some pepperiness
         image = denoise(image)
+
+        image = normalize_receipt(image)
 
         # sharpen image
         image = sharpening(image)
