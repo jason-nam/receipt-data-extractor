@@ -12,7 +12,7 @@ def get_grayscale(image):
 # noise removal
 def median_blur(image):
     return cv2.medianBlur(image,5)
- 
+
 # thresholding
 def thresholding(image):
     return cv2.threshold(image, 0, 255, 
@@ -22,7 +22,7 @@ def thresholding(image):
 def adaptive_thresholding(image):
     return cv2.adaptiveThreshold(image, 255,
                                  cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                 cv2.THRESH_BINARY_INV, 11, 2)
+                                 cv2.THRESH_BINARY_INV, 15, 2)
 
 # dilation
 def dilate(image):
@@ -85,25 +85,62 @@ def flatten(cleaned, background):
     
     return flattened
 
+# removes noise
+def denoise(image):
+    return cv2.fastNlMeansDenoising(image, None, 10, 7, 21)
+
+def sharpening(image):
+    kernel = np.array([[0, -1, 0],
+                       [-1, 5, -1],
+                       [0, -1, 0]])
+    return cv2.filter2D(image, -1, kernel)
+
+def increase_size(image):
+    return cv2.resize(image, None, fx=1.25, fy=1.25, interpolation=cv2.INTER_CUBIC)
+
+def normalize_receipt(image):
+    image = cv2.normalize(image, None, 0, 1.0, cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    image -= image.min()
+    image /= image.max()
+    image *= 255
+    return image
+
+
 if __name__ == '__main__':
     # list all image files in the input directory
     in_files = list(Path(IN_PATH).glob('*.[jJ][pP]*[gG]'))
-    
+
+    # Ideal conditions (slower, generally more flexible,
+    # lower accuracy but works more often than it doesnt)
+    # - dark background
+    # - camera flash on
+
     for in_file in in_files:
         # read the image
         image = cv2.imread(str(in_file))
-        
+
+        # TODO might need to consider brightening the white spots? or finding a way to making characters
+        # more defined
+
         # apply preprocessing steps
+        image = increase_size(image)
+
         image = get_grayscale(image)
         # cv2.imshow("grayscale", image)
         # cv2.waitKey(0)
 
+        # apply some denoising to get rid of some pepperiness
+        image = denoise(image)
+
+        image = normalize_receipt(image)
+
+        # sharpen image
+        image = sharpening(image)
+
+        image = increase_contrast(image)
+
         image = deskew(image)
         # cv2.imshow("deskew", image)
-        # cv2.waitKey(0)
-
-        # image = median_blur(image)
-        # cv2.imshow("remove noise", image)
         # cv2.waitKey(0)
 
         image = gaussian_blur(image)
@@ -114,33 +151,6 @@ if __name__ == '__main__':
         # cv2.imshow("adaptive thresholding", image)
         # cv2.waitKey(0)
 
-        # image = thresholding(image)
-        # cv2.imshow("thresholding", image)
-        # cv2.waitKey(0)
-
-        # image = erode(image)
-        # cv2.imshow("erosion", image)
-        # cv2.waitKey(0)
-        
-        # image = morphology(image) # idk
-        # cv2.imshow("morphology", image)
-        # cv2.waitKey(0)
-        
-        # dilate can help you get a rough estimate of the background.
-        # background = dilate(image)
-        # cv2.imshow("dilate", background)
-        # cv2.waitKey(0)
-
-        # image = flatten(image, background)
-        # cv2.imshow("flatten", image)
-        # cv2.waitKey(0)
-        
-        # image = increase_contrast(image) # might not be necessary
-        # cv2.imshow("increase contrast", image)
-        # cv2.waitKey(0)
-
-        # cv2.destroyAllWindows()
-        
         # save the preprocessed image to the output directory
         out_file = Path(OUT_PATH) / in_file.name
         cv2.imwrite(str(out_file), image)
