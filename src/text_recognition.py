@@ -1,3 +1,5 @@
+# recognize text and export csv data file
+
 import re
 import cv2
 import pytesseract
@@ -5,8 +7,8 @@ from pytesseract import Output
 import csv
 from pathlib import Path
 
-IN_PATH = '../data/processed_images/'
-OUT_PATH = '../data/image_to_data/'
+IN_PATH = '../data/out/processed_images/'
+OUT_PATH = '../data/out/image_to_data/'
 
 def extract_image_data(image, csv_file_path):
 

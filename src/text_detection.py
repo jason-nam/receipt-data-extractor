@@ -1,11 +1,13 @@
+# detect text and export image with text boxes
+
 import pytesseract
 from pytesseract import Output
 import csv
 from pathlib import Path
 import cv2
 
-IN_PATH = '../data/processed_images/'
-OUT_PATH = '../data/text_box_images/'
+IN_PATH = '../data/out/processed_images/'
+OUT_PATH = '../data/out/text_box_images/'
 
 # function to plot boxes around texts
 def plot_text_box(image):

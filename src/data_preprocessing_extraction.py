@@ -1,9 +1,11 @@
+# preprocessing data
+
 import numpy as np
 import cv2
 from pathlib import Path
 
-IN_PATH = '../data/unprocessed_images/'
-OUT_PATH = '../data/processed_images/'
+IN_PATH = '../data/in/'
+OUT_PATH = '../data/out/processed_images/'
 
 # get grayscale image
 def get_grayscale(image):
