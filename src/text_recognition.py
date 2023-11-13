@@ -22,17 +22,20 @@ def extract_image_data(image, csv_file_path):
             csv_row = [d['left'][i], d['top'][i], d['width'][i], d['height'][i], d['text'][i]]
             writer.writerow(csv_row)
 
-if __name__ == '__main__':
+def export_data_csv(file, csv_file_path):
+    image = cv2.imread(str(file))
 
+    extract_image_data(image, csv_file_path)
+
+    # print(str(file.name))
+
+def main():
     in_files = list(Path(IN_PATH).glob('*.[jJ][pP]*[gG]'))
     
     for in_file in in_files:
-        
-        image = cv2.imread(str(in_file))
-
         # path to the CSV file
         csv_file_path = Path(OUT_PATH + str(in_file.stem) + '.csv')
+        export_data_csv(in_file, csv_file_path)
 
-        extract_image_data(image, csv_file_path)
-
-        print(str(in_file.name))
+if __name__ == '__main__':
+    main()

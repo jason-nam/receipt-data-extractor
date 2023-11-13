@@ -199,10 +199,28 @@ def extract_receipt(image):
     return cv2.warpPerspective(orig_image, receipt, (receipt_corners[2][0], receipt_corners[2][1]),
             flags=cv2.INTER_CUBIC)
 
+def process_data_extraction(file):
+    # read the image
+    image = cv2.imread(str(file))
 
+    # apply preprocessing steps
+    image = extract_receipt(image)
 
+    # upscale image
+    image = increase_size(image)
 
-if __name__ == '__main__':
+    # normalize
+    image = normalize_receipt(image)
+
+    # grayscale
+    image = get_grayscale(image)
+
+    # increase contrast
+    image = increase_contrast(image)
+
+    return image
+
+def main():
     # list all image files in the input directory
     in_files = list(Path(IN_PATH).glob('*.[jJ][pP]*[gG]'))
 
@@ -214,24 +232,11 @@ if __name__ == '__main__':
     # - try to keep receipt as straight and flat as possible
 
     for in_file in in_files:
-        # read the image
-        image = cv2.imread(str(in_file))
-
-        # apply preprocessing steps
-        image = extract_receipt(image)
-
-        # upscale image
-        image = increase_size(image)
-
-        # normalize
-        image = normalize_receipt(image)
-
-        # grayscale
-        image = get_grayscale(image)
-
-        # increase contrast
-        image = increase_contrast(image)
+        image = process_data_extraction(in_file)
 
         # save the preprocessed image to the output directory
         out_file = Path(OUT_PATH) / in_file.name
         cv2.imwrite(str(out_file), image)
+
+if __name__ == '__main__':
+    main()

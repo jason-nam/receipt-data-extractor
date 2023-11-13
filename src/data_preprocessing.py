@@ -107,9 +107,45 @@ def normalize_receipt(image):
     image *= 255
     return image
 
+def process_data(file):
+    # read the image
+    image = cv2.imread(str(file))
 
-if __name__ == '__main__':
-    # list all image files in the input directory
+    # TODO might need to consider brightening the white spots? or finding a way to making characters
+    # more defined
+
+    # apply preprocessing steps
+    image = increase_size(image)
+
+    image = get_grayscale(image)
+    # cv2.imshow("grayscale", image)
+    # cv2.waitKey(0)
+
+    # apply some denoising to get rid of some pepperiness
+    image = denoise(image)
+
+    image = normalize_receipt(image)
+
+    # sharpen image
+    image = sharpening(image)
+
+    image = increase_contrast(image)
+
+    image = deskew(image)
+    # cv2.imshow("deskew", image)
+    # cv2.waitKey(0)
+
+    image = gaussian_blur(image)
+    # cv2.imshow("gaussian blur", image)
+    # cv2.waitKey(0)
+
+    image = adaptive_thresholding(image)
+    # cv2.imshow("adaptive thresholding", image)
+    # cv2.waitKey(0)
+
+    return image
+
+def main():
     in_files = list(Path(IN_PATH).glob('*.[jJ][pP]*[gG]'))
 
     # Ideal conditions (slower, generally more flexible,
@@ -118,41 +154,11 @@ if __name__ == '__main__':
     # - camera flash on
 
     for in_file in in_files:
-        # read the image
-        image = cv2.imread(str(in_file))
-
-        # TODO might need to consider brightening the white spots? or finding a way to making characters
-        # more defined
-
-        # apply preprocessing steps
-        image = increase_size(image)
-
-        image = get_grayscale(image)
-        # cv2.imshow("grayscale", image)
-        # cv2.waitKey(0)
-
-        # apply some denoising to get rid of some pepperiness
-        image = denoise(image)
-
-        image = normalize_receipt(image)
-
-        # sharpen image
-        image = sharpening(image)
-
-        image = increase_contrast(image)
-
-        image = deskew(image)
-        # cv2.imshow("deskew", image)
-        # cv2.waitKey(0)
-
-        image = gaussian_blur(image)
-        # cv2.imshow("gaussian blur", image)
-        # cv2.waitKey(0)
-
-        image = adaptive_thresholding(image)
-        # cv2.imshow("adaptive thresholding", image)
-        # cv2.waitKey(0)
+        image = process_data(in_file)
 
         # save the preprocessed image to the output directory
         out_file = Path(OUT_PATH) / in_file.name
         cv2.imwrite(str(out_file), image)
+
+if __name__ == '__main__':
+    main()
